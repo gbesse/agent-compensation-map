@@ -1,0 +1,341 @@
+{
+  "status": "plan_for_review",
+  "plan": {
+    "kind": "observe",
+    "id": "read_charge_count",
+    "cost": 9,
+    "branches": [
+      {
+        "value": {
+          "net_charges": 0
+        },
+        "plan": {
+          "kind": "action",
+          "id": "cancel_order",
+          "cost": 2,
+          "next": {
+            "kind": "action",
+            "id": "release_stock",
+            "cost": 1,
+            "next": {
+              "kind": "done",
+              "cost": 0
+            }
+          }
+        }
+      },
+      {
+        "value": {
+          "net_charges": 1
+        },
+        "plan": {
+          "kind": "action",
+          "id": "refund_one",
+          "cost": 5,
+          "next": {
+            "kind": "action",
+            "id": "cancel_order",
+            "cost": 2,
+            "next": {
+              "kind": "action",
+              "id": "release_stock",
+              "cost": 1,
+              "next": {
+                "kind": "done",
+                "cost": 0
+              }
+            }
+          }
+        }
+      },
+      {
+        "value": {
+          "net_charges": 2
+        },
+        "plan": {
+          "kind": "action",
+          "id": "refund_one",
+          "cost": 8,
+          "next": {
+            "kind": "action",
+            "id": "refund_one",
+            "cost": 5,
+            "next": {
+              "kind": "action",
+              "id": "cancel_order",
+              "cost": 2,
+              "next": {
+                "kind": "action",
+                "id": "release_stock",
+                "cost": 1,
+                "next": {
+                  "kind": "done",
+                  "cost": 0
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "worlds": [
+    {
+      "net_charges": 0,
+      "notification_sent": false,
+      "order_state": "open",
+      "stock_reserved": true
+    },
+    {
+      "net_charges": 1,
+      "notification_sent": false,
+      "order_state": "open",
+      "stock_reserved": true
+    },
+    {
+      "net_charges": 2,
+      "notification_sent": false,
+      "order_state": "open",
+      "stock_reserved": true
+    }
+  ],
+  "snapshot_sha256": "1427592ba9da5ef02fb595861c48b75c5908e6677b1ec1be2bf8eed2a15a4729",
+  "source_case": {
+    "synthetic": true,
+    "domains": {
+      "stock_reserved": [
+        false,
+        true
+      ],
+      "net_charges": [
+        0,
+        1,
+        2
+      ],
+      "order_state": [
+        "none",
+        "open",
+        "cancelled"
+      ],
+      "notification_sent": [
+        false,
+        true
+      ]
+    },
+    "initial": {
+      "stock_reserved": false,
+      "net_charges": 0,
+      "order_state": "none",
+      "notification_sent": false
+    },
+    "operations": [
+      {
+        "id": "reserve_stock",
+        "set": {
+          "stock_reserved": true
+        }
+      },
+      {
+        "id": "create_order",
+        "set": {
+          "order_state": "open"
+        }
+      },
+      {
+        "id": "charge_attempt",
+        "delta": {
+          "net_charges": 1
+        }
+      },
+      {
+        "id": "send_notification",
+        "set": {
+          "notification_sent": true
+        }
+      }
+    ],
+    "trace": [
+      {
+        "operation": "reserve_stock",
+        "status": "confirmed"
+      },
+      {
+        "operation": "create_order",
+        "status": "confirmed"
+      },
+      {
+        "operation": "charge_attempt",
+        "status": "unknown"
+      },
+      {
+        "operation": "charge_attempt",
+        "status": "unknown"
+      }
+    ],
+    "compensations": [
+      {
+        "id": "release_stock",
+        "cost": 1,
+        "pre": {
+          "stock_reserved": true
+        },
+        "set": {
+          "stock_reserved": false
+        }
+      },
+      {
+        "id": "refund_one",
+        "cost": 3,
+        "pre": {
+          "net_charges": {
+            "gt": 0
+          }
+        },
+        "delta": {
+          "net_charges": -1
+        }
+      },
+      {
+        "id": "cancel_order",
+        "cost": 1,
+        "pre": {
+          "order_state": "open",
+          "net_charges": 0
+        },
+        "set": {
+          "order_state": "cancelled"
+        }
+      }
+    ],
+    "observations": [
+      {
+        "id": "read_charge_count",
+        "cost": 1,
+        "fields": [
+          "net_charges"
+        ]
+      }
+    ],
+    "observed": {},
+    "goal": {
+      "stock_reserved": false,
+      "net_charges": 0,
+      "order_state": {
+        "in": [
+          "none",
+          "cancelled"
+        ]
+      },
+      "notification_sent": false
+    }
+  },
+  "worst_case_cost": 9,
+  "minimum_cost_within_depth_proven": true,
+  "max_depth": 7,
+  "states_checked": 20,
+  "verification": {
+    "valid": true,
+    "worlds_checked": 3,
+    "worst_case_cost": 9,
+    "paths": [
+      {
+        "initial_world": {
+          "net_charges": 0,
+          "notification_sent": false,
+          "order_state": "open",
+          "stock_reserved": true
+        },
+        "final_world": {
+          "net_charges": 0,
+          "notification_sent": false,
+          "order_state": "cancelled",
+          "stock_reserved": false
+        },
+        "cost": 3,
+        "steps": [
+          {
+            "observe": "read_charge_count",
+            "value": {
+              "net_charges": 0
+            }
+          },
+          {
+            "action": "cancel_order"
+          },
+          {
+            "action": "release_stock"
+          }
+        ]
+      },
+      {
+        "initial_world": {
+          "net_charges": 1,
+          "notification_sent": false,
+          "order_state": "open",
+          "stock_reserved": true
+        },
+        "final_world": {
+          "net_charges": 0,
+          "notification_sent": false,
+          "order_state": "cancelled",
+          "stock_reserved": false
+        },
+        "cost": 6,
+        "steps": [
+          {
+            "observe": "read_charge_count",
+            "value": {
+              "net_charges": 1
+            }
+          },
+          {
+            "action": "refund_one"
+          },
+          {
+            "action": "cancel_order"
+          },
+          {
+            "action": "release_stock"
+          }
+        ]
+      },
+      {
+        "initial_world": {
+          "net_charges": 2,
+          "notification_sent": false,
+          "order_state": "open",
+          "stock_reserved": true
+        },
+        "final_world": {
+          "net_charges": 0,
+          "notification_sent": false,
+          "order_state": "cancelled",
+          "stock_reserved": false
+        },
+        "cost": 9,
+        "steps": [
+          {
+            "observe": "read_charge_count",
+            "value": {
+              "net_charges": 2
+            }
+          },
+          {
+            "action": "refund_one"
+          },
+          {
+            "action": "refund_one"
+          },
+          {
+            "action": "cancel_order"
+          },
+          {
+            "action": "release_stock"
+          }
+        ]
+      }
+    ],
+    "external_actions_executed": false
+  },
+  "external_actions_executed": false
+}

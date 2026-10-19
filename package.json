@@ -1,0 +1,17 @@
+{
+  "name": "agent-compensation-map-web-checks",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "test": "python3 -m unittest discover -s tests -v",
+    "test:browser": "node tests/browser.mjs",
+    "format": "prettier --write compensation_map/web tests/*.mjs '*.md' package.json .github/workflows/*.yml",
+    "format:check": "prettier --check compensation_map/web tests/*.mjs '*.md' package.json .github/workflows/*.yml",
+    "test:mcp": "node tests/mcp-sdk.mjs"
+  },
+  "devDependencies": {
+    "playwright": "1.63.0",
+    "prettier": "3.7.4",
+    "@modelcontextprotocol/sdk": "1.32.1"
+  }
+}

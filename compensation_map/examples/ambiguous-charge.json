@@ -1,0 +1,20 @@
+{
+  "synthetic": true,
+  "domains": {"stock_reserved":[false,true],"net_charges":[0,1,2],"order_state":["none","open","cancelled"],"notification_sent":[false,true]},
+  "initial": {"stock_reserved":false,"net_charges":0,"order_state":"none","notification_sent":false},
+  "operations": [
+    {"id":"reserve_stock","set":{"stock_reserved":true}},
+    {"id":"create_order","set":{"order_state":"open"}},
+    {"id":"charge_attempt","delta":{"net_charges":1}},
+    {"id":"send_notification","set":{"notification_sent":true}}
+  ],
+  "trace": [{"operation":"reserve_stock","status":"confirmed"},{"operation":"create_order","status":"confirmed"},{"operation":"charge_attempt","status":"unknown"},{"operation":"charge_attempt","status":"unknown"}],
+  "compensations": [
+    {"id":"release_stock","cost":1,"pre":{"stock_reserved":true},"set":{"stock_reserved":false}},
+    {"id":"refund_one","cost":3,"pre":{"net_charges":{"gt":0}},"delta":{"net_charges":-1}},
+    {"id":"cancel_order","cost":1,"pre":{"order_state":"open","net_charges":0},"set":{"order_state":"cancelled"}}
+  ],
+  "observations": [{"id":"read_charge_count","cost":1,"fields":["net_charges"]}],
+  "observed": {},
+  "goal": {"stock_reserved":false,"net_charges":0,"order_state":{"in":["none","cancelled"]},"notification_sent":false}
+}
