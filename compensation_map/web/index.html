@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Agent Compensation Map</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <header>
+      <a class="brand" href="/">AGENT / COMPENSATION MAP</a>
+      <nav aria-label="Language">
+        <a href="?lang=fr">FR</a><a href="?lang=en">EN</a><a href="?lang=es">ES</a>
+      </nav>
+    </header>
+    <main>
+      <section class="intro">
+        <p class="eyebrow" data-i18n="eyebrow"></p>
+        <h1 data-i18n="title"></h1>
+        <p class="lede" data-i18n="lede"></p>
+      </section>
+      <section class="workspace">
+        <aside>
+          <span class="number">01 /</span>
+          <h2 data-i18n="uncertainty"></h2>
+          <label class="field" for="attempts" data-i18n="attempts"></label
+          ><select id="attempts">
+            <option>0</option>
+            <option>1</option>
+            <option selected>2</option></select
+          ><label class="toggle"
+            ><input type="checkbox" id="observe" checked /><span data-i18n="observe"></span></label
+          ><label class="toggle"
+            ><input type="checkbox" id="irreversible" /><span
+              data-i18n="irreversible"
+            ></span></label
+          ><label class="field" for="depth" data-i18n="depth"></label
+          ><input type="number" id="depth" min="1" max="9" value="7" /><button
+            id="plan"
+            data-i18n="plan"
+          ></button>
+          <p role="status" id="status"></p>
+          <p class="hint" data-i18n="simulation"></p>
+        </aside>
+        <article>
+          <div class="section-head">
+            <div>
+              <span class="number">02 /</span>
+              <h2 data-i18n="tree"></h2>
+            </div>
+            <span class="badge" id="verdict">—</span>
+          </div>
+          <div class="metrics">
+            <div><strong id="worlds">—</strong><span data-i18n="worlds"></span></div>
+            <div><strong id="cost">—</strong><span data-i18n="cost"></span></div>
+            <div><strong id="verified">—</strong><span data-i18n="verified"></span></div>
+          </div>
+          <div id="tree"></div>
+          <h3 data-i18n="replays"></h3>
+          <div id="replays"></div>
+          <div class="actions">
+            <button class="secondary" id="download" data-i18n="download"></button
+            ><code id="digest"></code>
+          </div>
+        </article>
+      </section>
+      <footer>
+        <p data-i18n="limits"></p>
+        <a href="https://github.com/gbesse/agent-compensation-map">GitHub ↗</a>
+      </footer>
+    </main>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>
